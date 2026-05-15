@@ -33,10 +33,11 @@ AdminsKit is a native C++ **AMX Mod X module** for Counter-Strike 1.6 (GoldSrc) 
 Requires CMake 3.21+, Ninja, and a C++17 compiler with 32-bit support.
 
 ```bash
-./build.sh                   # GCC debug (default)
-./build.sh clang             # Clang debug
-./build.sh gcc release       # GCC release
-./build.sh clang release     # Clang release
+git submodule update --init --recursive   # first time only
+./build.sh                                # GCC debug (default)
+./build.sh clang                          # Clang debug
+./build.sh gcc release                    # GCC release
+./build.sh clang release                  # Clang release
 ```
 
 Output: `bin/<compiler>/adminskit_amxx_i386.so` (Linux) or `adminskit_amxx.dll` (Windows).
