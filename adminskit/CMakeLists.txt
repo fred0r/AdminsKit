@@ -54,7 +54,13 @@ set(META_DETACH "__OnMetaDetach")    # void OnMetaDetach()
 # Add dependencies to the build
 #-------------------------------------------------------------------------------------------
 
+# Override outdated cssdk ReHLDS/ReGameDLL API headers with latest versions
+target_include_directories(${PROJECT_NAME} SYSTEM BEFORE PRIVATE
+    "${CMAKE_SOURCE_DIR}/libs/overrides/include"
+)
+
 # Add subdirectories
+set(CISTA_FMT OFF CACHE BOOL "disable libfmt support" FORCE)
 add_subdirectory("${CMAKE_SOURCE_DIR}/libs/cista" "cista")
 add_subdirectory("${CMAKE_SOURCE_DIR}/libs/cssdk" "cssdk")
 add_subdirectory("${CMAKE_SOURCE_DIR}/libs/metamod" "metamod")

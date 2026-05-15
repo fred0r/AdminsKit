@@ -55,7 +55,6 @@ if(LINKER_LLD)
         -Wl,--as-needed
         -Wl,--gc-sections
         -Wl,--no-undefined
-        -Wl,--no-lto-legacy-pass-manager
         -Wl,--check-sections
 
         # Warnings

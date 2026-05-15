@@ -60,11 +60,11 @@ option(MSVC_CODE_ANALYSIS      "Enable MSVC code analysis."                     
 option(MSVC_AUTO_PARALLELIZER  "Enable auto-parallelizer feature of the compiler."  ON)
 
 # GCC options
-option(LINKER_GOLD             "Use the Gold linker."                               ON)
+option(LINKER_GOLD             "Use the Gold linker."                               OFF)
 option(GCC_ANALYZER            "Run GCC static analysis (GCC v10.0 and newer)."     OFF)
 
 # Clang options
-option(LINKER_LLD              "Use the LLD linker."                                ON)
+option(LINKER_LLD              "Use the LLD linker."                                OFF)
 
 # Intel C++ options
 option(LINK_LIB_INTEL          "Link Intel provided libraries statically"           ON)

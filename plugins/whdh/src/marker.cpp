@@ -45,7 +45,7 @@ namespace
         constexpr auto side_offset = 13.F;
         constexpr auto bottom_offset = 36.F;
 
-        static Vector forward{}, right{}, up{};
+        Vector forward{}, right{}, up{};
         engine::AngleVectors(perpendicular_angles, forward, right, up);
 
         const auto side_dislocation = right * side_offset;
@@ -63,7 +63,7 @@ namespace
                                           Vector frame_points_traced[FramePointEnd],
                                           int& closer_frame_point)
     {
-        static TraceResult trace_result{};
+        TraceResult trace_result{};
         auto small_fraction = 1.F;
 
         for (auto i = 0; i < FramePointEnd; ++i) {
@@ -131,16 +131,16 @@ namespace whdh
             return 0;
         }
 
-        static Vector direction_angles{};
+        Vector direction_angles{};
         engine::VecToAngles((entity->vars.owner->vars.origin - observable->vars.origin).Normalize(), direction_angles);
 
         direction_angles.x = -direction_angles.x;
         const auto observer_eyes = GetGunPosition(observable->vars);
 
-        static Vector frame_points[FramePointEnd]{};
+        Vector frame_points[FramePointEnd]{};
         CalculateFramePoints(entity->vars.owner->vars.origin, direction_angles, frame_points);
 
-        static Vector frame_points_traced[FramePointEnd]{};
+        Vector frame_points_traced[FramePointEnd]{};
         auto closer_frame_point = 0;
 
         if (!TraceEyesFrame(observable, observer_eyes, frame_points, frame_points_traced, closer_frame_point)) {
@@ -151,11 +151,11 @@ namespace whdh
             return 0;
         }
 
-        static Vector forward{}, right{}, up{};
-        engine::AngleVectors(direction_angles, forward, right, up);
+        Vector forward2{}, right2{}, up2{};
+        engine::AngleVectors(direction_angles, forward2, right2, up2);
 
-        const auto point_up = frame_points_traced[closer_frame_point] + up;
-        const auto point_right = frame_points_traced[closer_frame_point] + right;
+        const auto point_up = frame_points_traced[closer_frame_point] + up2;
+        const auto point_right = frame_points_traced[closer_frame_point] + right2;
         const auto plane = Vector4D::Plane3Points(frame_points_traced[closer_frame_point], point_right, point_up);
 
         // Move to plane

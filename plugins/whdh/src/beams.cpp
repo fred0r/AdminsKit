@@ -88,8 +88,9 @@ namespace
         constexpr auto x2 = 255.F;
         constexpr auto y1 = 2040.F;
         constexpr auto y2 = 30.F;
+        constexpr auto slope = (y2 - x2) / (y1 - x1);
 
-        return std::clamp(static_cast<int>(std::round(x2 + (distance_to_target - x1) * (y2 - x2) / (y1 - x1))), 30, 255);
+        return std::clamp(static_cast<int>(std::round(x2 + (distance_to_target - x1) * slope)), 30, 255);
     }
 
     [[nodiscard]] const Color24& GetBoxColor(const PlayerBase* const target, const float distance_to_target,
@@ -118,9 +119,9 @@ namespace
         constexpr auto x2 = 90.F;
         constexpr auto y1 = 2040.F;
         constexpr auto y2 = 1.F;
+        constexpr auto slope = (y2 - x2) / (y1 - x1);
 
-        return std::clamp(
-            static_cast<int>(std::round(x2 + (distance_to_target - x1) * (y2 - x2) / (y1 - x1))), 1, 255);
+        return std::clamp(static_cast<int>(std::round(x2 + (distance_to_target - x1) * slope)), 1, 255);
     }
 
     [[nodiscard]] const Color24& GetLineColor(const PlayerBase* const target, const float last_hit_time) noexcept
@@ -207,7 +208,7 @@ namespace whdh
     {
         assert(resources_->Precached());
 
-        static TraceResult trace_result{};
+        TraceResult trace_result{};
         engine::TraceLine(observable->vars->origin, draw_args.target->vars->origin,
                           TR_IGNORE_GLASS, observable->GetEdict(), &trace_result);
 

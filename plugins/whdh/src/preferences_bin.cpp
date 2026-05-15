@@ -117,16 +117,14 @@ namespace whdh
 
         const auto now = UnixTimestamp();
         const auto save_prefs_seconds = static_cast<int>(save_prefs * 24.F * 60.F * 60.F);
-        std::vector<raw::string> outdated{};
 
-        for (const auto& [auth, prefs] : preferences_map_) {
-            if (now - prefs.timestamp > save_prefs_seconds) {
-                outdated.emplace_back(auth);
+        for (auto it = preferences_map_.begin(); it != preferences_map_.end();) {
+            if (now - it->second.timestamp > save_prefs_seconds) {
+                preferences_map_.erase(it++);
             }
-        }
-
-        for (const auto& auth : outdated) {
-            preferences_map_.erase(auth);
+            else {
+                ++it;
+            }
         }
     }
 

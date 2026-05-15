@@ -22,7 +22,7 @@
 #include <core/messages.h>
 #include <core/strings.h>
 #include <metamod/engine.h>
-#include <algorithm>
+#include <cstdio>
 
 using namespace core;
 using namespace cssdk;
@@ -71,7 +71,8 @@ namespace server_stats
     void Plugin::Subscribe(Edict* const player)
     {
         assert(cssdk::IsValidEntity(player));
-        subscribers_.push_back(player);
+        assert(subscriber_count_ < subscribers_.size());
+        subscribers_[subscriber_count_++] = player;
 
         for (const auto& hook : hooks_) {
             hook->Enable();
@@ -82,13 +83,14 @@ namespace server_stats
     {
         assert(player != nullptr);
 
-        subscribers_.erase(
-            std::remove_if(subscribers_.begin(), subscribers_.end(), [player](const auto* const element) {
-                return element == player;
-            }),
-            subscribers_.end());
+        for (auto i = std::size_t{}; i < subscriber_count_; ++i) {
+            if (subscribers_[i] == player) {
+                subscribers_[i] = subscribers_[--subscriber_count_];
+                break;
+            }
+        }
 
-        if (subscribers_.empty()) {
+        if (subscriber_count_ == 0) {
             for (const auto& hook : hooks_) {
                 hook->Disable();
             }
@@ -100,10 +102,13 @@ namespace server_stats
 
     bool Plugin::IsSubscriber(const Edict* player) const
     {
-        return std::any_of(
-            subscribers_.cbegin(), subscribers_.cend(), [player](const auto* const element) {
-                return element == player;
-            });
+        for (auto i = std::size_t{}; i < subscriber_count_; ++i) {
+            if (subscribers_[i] == player) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     void Plugin::OnStartFrame(const GameDllStartFrameMChain& chain)
@@ -135,29 +140,35 @@ namespace server_stats
         show_hud_last_time_ = g_global_vars->time;
 
         if (flags & FL_FPS) {
-            message += str::Format(" | FPS: %u", fps_);
+            char buf[32];
+            std::snprintf(buf, sizeof(buf), " | FPS: %zu", fps_);
+            message += buf;
         }
 
         if (flags & FL_CPU) {
-            message += str::Format(" | CPU: %.2f", GetCpuUsed());
+            char buf[32];
+            std::snprintf(buf, sizeof(buf), " | CPU: %.2f", GetCpuUsed());
+            message += buf;
         }
 
         if (flags & FL_VIRT_MEM) {
             const auto& value = BytesToHumanReadableString(GetVirtualMemoryUsed());
-            message += str::Format(" | Virt. Memory: %s", value.c_str());
+            message += " | Virt. Memory: ";
+            message += value;
         }
 
         if (flags & FL_PHYS_MEM) {
             const auto& value = BytesToHumanReadableString(GetPhysicalMemoryUsed());
-            message += str::Format(" | Phys. Memory: %s", value.c_str());
+            message += " | Phys. Memory: ";
+            message += value;
         }
 
         if (message = str::Trim(str::Trim(message), '|'); message.empty()) {
             return;
         }
 
-        for (auto* const subscriber : subscribers_) {
-            if (IsValidEntity(subscriber)) {
+        for (auto i = std::size_t{}; i < subscriber_count_; ++i) {
+            if (auto* const subscriber = subscribers_[i]; IsValidEntity(subscriber)) {
                 messages::SendHudMessage(subscriber, hud_params_, message);
             }
         }
@@ -203,8 +214,8 @@ namespace server_stats
 
     void Plugin::OnServerDeactivate(const GameDllServerDeactivateMChain& chain)
     {
-        for (const auto* const subscriber : subscribers_) {
-            Unsubscribe(subscriber);
+        while (subscriber_count_ > 0) {
+            Unsubscribe(subscribers_[0]);
         }
 
         chain.CallNext();

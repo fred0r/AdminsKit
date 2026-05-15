@@ -521,5 +521,4 @@ CMakeUserPresets.json
 #################
 
 out/
-version.rc
-libs/metamod/include/metamod/config.h
+include/metamod/config.h

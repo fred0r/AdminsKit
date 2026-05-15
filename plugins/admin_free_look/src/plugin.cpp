@@ -54,7 +54,10 @@ namespace admin_free_look
 
     int Plugin::OnGetForceCamera(const ReGameGetForceCameraMChain& chain, PlayerBase* const observer)
     {
-        assert(g_game_rules != nullptr);
+        if (g_game_rules == nullptr) {
+            return chain.CallNext(observer);
+        }
+
         const auto force_camera = chain.CallNext(observer);
 
         if ((g_game_rules->force_camera_value > 0.F || g_game_rules->force_chase_cam_value > 0.F) &&

@@ -21,6 +21,7 @@
 #include <cssdk/public/utils.h>
 #include <mhooks/metamod.h>
 #include <mhooks/reapi.h>
+#include <array>
 #include <cstddef>
 #include <vector>
 
@@ -33,7 +34,8 @@ namespace server_stats
         float show_hud_last_time_{};
         float frame_count_start_time_{};
         cssdk::HudTextParams hud_params_{};
-        std::vector<cssdk::Edict*> subscribers_{};
+        std::array<cssdk::Edict*, cssdk::MAX_CLIENTS + 1> subscribers_{};
+        std::size_t subscriber_count_{};
         std::vector<std::unique_ptr<mhooks::MHook>> hooks_{};
         std::unique_ptr<mhooks::MHook> client_command_hook_{};
 
