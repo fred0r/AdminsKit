@@ -54,7 +54,6 @@ namespace invisible_spectator
         hooks_.emplace_back(MHookGameEvent("TeamInfo", {DELEGATE_ARG<&Plugin::OnEventTeamInfo>, this})->Unique());
         hooks_.emplace_back(MHookGameDllClientCommand({DELEGATE_ARG<&Plugin::OnClientCommand>, this}, false)->Unique());
         hooks_.emplace_back(MHookReHldsWriteFullClientUpdate({DELEGATE_ARG<&Plugin::OnWriteFullClientUpdate>, this})->Unique());
-        hooks_.emplace_back(MHookReHldsEmitSound2({DELEGATE_ARG<&Plugin::OnSvEmitSound2>, this})->Unique());
     }
 
     bool Plugin::ShouldBeInvisible(const int player_index) const
@@ -181,21 +180,5 @@ namespace invisible_spectator
         else {
             chain.CallNext(client, info, max_len, info_buffer, receiver);
         }
-    }
-
-    bool Plugin::OnSvEmitSound2(const ReHldsEmitSound2MChain& chain, Edict* const entity,
-                                IGameClient* const receiver, const int channel, const char* const sample,
-                                const float volume, const float attenuation, const int flags, const int pitch,
-                                const int emit_flags, const float* const origin)
-    {
-        if (entity) {
-            const auto entity_index = type_conversion::IndexOfEntity(entity);
-
-            if (IsClient(entity_index) && player_invisible_[entity_index]) {
-                return false;
-            }
-        }
-
-        return chain.CallNext(entity, receiver, channel, sample, volume, attenuation, flags, pitch, emit_flags, origin);
     }
 }
