@@ -51,5 +51,8 @@ namespace invisible_spectator
         void OnClientCommand(const GameDllClientCommandMChain& chain, cssdk::Edict* client);
         void OnWriteFullClientUpdate(const ReHldsWriteFullClientUpdateMChain& chain, cssdk::IGameClient* client, char* info,
                                      std::size_t max_len, cssdk::SizeBuf* info_buffer, cssdk::IGameClient* receiver);
+        bool OnSvEmitSound2(const ReHldsEmitSound2MChain& chain, cssdk::Edict* entity, cssdk::IGameClient* receiver,
+                            int channel, const char* sample, float volume, float attenuation, int flags, int pitch,
+                            int emit_flags, const float* origin);
     };
 }
