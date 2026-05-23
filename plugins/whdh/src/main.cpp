@@ -56,7 +56,10 @@ namespace whdh
 
             if (status == amxx::Status::Ok) {
                 assert(cvars::cvar_enable != nullptr);
-                MHookCVarChange(cvars::cvar_enable, DELEGATE_ARG<OnEnableCvarChange>);
+                if (static auto cvar_change_hooked = false; !cvar_change_hooked) {
+                    MHookCVarChange(cvars::cvar_enable, DELEGATE_ARG<OnEnableCvarChange>);
+                    cvar_change_hooked = true;
+                }
             }
 
             return status;
