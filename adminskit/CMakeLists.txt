@@ -63,7 +63,6 @@ target_include_directories(${PROJECT_NAME} SYSTEM BEFORE PRIVATE
 set(CISTA_FMT OFF CACHE BOOL "disable libfmt support" FORCE)
 add_subdirectory("${CMAKE_SOURCE_DIR}/libs/cista" "cista")
 add_subdirectory("${CMAKE_SOURCE_DIR}/libs/cssdk" "cssdk")
-add_subdirectory("${CMAKE_SOURCE_DIR}/libs/metamod" "metamod")
 add_subdirectory("${CMAKE_SOURCE_DIR}/libs/amxx" "amxx")
 add_subdirectory("${CMAKE_SOURCE_DIR}/libs/core" "core")
 add_subdirectory("${CMAKE_SOURCE_DIR}/libs/mhooks" "mhooks")
@@ -88,7 +87,7 @@ endif()
 # Link dependencies
 target_link_libraries(${PROJECT_NAME} PRIVATE
     "cista"
-    "cssdk" "metamod" "amxx" "core" "mhooks"
+    "cssdk" "amxx" "core" "mhooks"
     "admin_free_look"
     "invisible_spectator"
     "server_stats"

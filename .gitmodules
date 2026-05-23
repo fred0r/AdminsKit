@@ -13,7 +13,3 @@
 [submodule "libs/cista"]
 	path = libs/cista
 	url = https://github.com/felixguendling/cista
-[submodule "libs/metamod-r"]
-	path = libs/metamod-r
-	url = https://github.com/rehlds/Metamod-R
-	branch = master
