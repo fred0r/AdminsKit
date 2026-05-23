@@ -2,10 +2,8 @@
 set -euo pipefail
 
 # Ensure submodules are initialized
-if [ ! -f libs/cista/CMakeLists.txt ]; then
-    echo "==> Initializing git submodules..."
-    git submodule update --init --recursive
-fi
+echo "==> Initializing git submodules..."
+git submodule update --init --recursive
 
 usage() {
     echo "Usage: ./build.sh [COMPILER] [BUILD_TYPE]"
