@@ -8,18 +8,18 @@ git submodule update --init --recursive
 usage() {
     echo "Usage: ./build.sh [COMPILER] [BUILD_TYPE]"
     echo ""
-    echo "  COMPILER     gcc (default) | clang | intel"
+    echo "  COMPILER     clang (default) | gcc | intel"
     echo "  BUILD_TYPE   debug (default) | release | relwithdebinfo"
     echo ""
     echo "Examples:"
-    echo "  ./build.sh                    # gcc debug"
-    echo "  ./build.sh clang              # clang debug"
-    echo "  ./build.sh gcc release        # gcc release"
+    echo "  ./build.sh                    # clang debug"
+    echo "  ./build.sh gcc                # gcc debug"
     echo "  ./build.sh clang release      # clang release"
+    echo "  ./build.sh gcc release        # gcc release"
     exit 1
 }
 
-COMPILER="gcc"
+COMPILER="clang"
 BUILD_TYPE="debug"
 
 for arg in "$@"; do
