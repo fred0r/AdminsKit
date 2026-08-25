@@ -17,7 +17,7 @@ AdminsKit is a native C++ **AMX Mod X module** for Counter-Strike 1.6 (GoldSrc) 
 | Dependency | Source |
 |---|---|
 | CSSDK | https://gitlab.com/goldsrc-sdk/cssdk (GoldSrc SDK, ReHLDS, ReGameDLL headers) |
-| Metamod-R | https://github.com/rehlds/Metamod-R |
+| Metamod | https://gitlab.com/goldsrc-sdk/metamod |
 | AMXX SDK | https://gitlab.com/goldsrc-sdk/amxx |
 | Core | https://gitlab.com/goldsrc-sdk/core |
 | MHooks | https://gitlab.com/goldsrc-sdk/mhooks |
@@ -33,11 +33,10 @@ AdminsKit is a native C++ **AMX Mod X module** for Counter-Strike 1.6 (GoldSrc) 
 Requires CMake 3.21+, Ninja, and a C++17 compiler with 32-bit support.
 
 ```bash
-git submodule update --init --recursive   # first time only
-./build.sh                                # GCC debug (default)
-./build.sh clang                          # Clang debug
-./build.sh gcc release                    # GCC release
-./build.sh clang release                  # Clang release
+./build.sh                                # clang release, 1 job (default)
+./build.sh -c=gcc -t=debug                # gcc debug
+./build.sh -c=clang -j=4                  # clang release, 4 jobs
+./build.sh -c=gcc -t=relwithdebinfo -j=8  # gcc relwithdebinfo, 8 jobs
 ```
 
 Output: `bin/<compiler>/adminskit_amxx_i386.so` (Linux) or `adminskit_amxx.dll` (Windows).

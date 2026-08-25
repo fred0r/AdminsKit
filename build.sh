@@ -6,26 +6,30 @@ echo "==> Initializing git submodules..."
 git submodule update --init --recursive
 
 usage() {
-    echo "Usage: ./build.sh [COMPILER] [BUILD_TYPE]"
+    echo "Usage: ./build.sh [OPTIONS]"
     echo ""
-    echo "  COMPILER     clang (default) | gcc | intel"
-    echo "  BUILD_TYPE   debug (default) | release | relwithdebinfo"
+    echo "  -c=<compiler>   gcc | clang (default) | intel"
+    echo "  -t=<type>       debug | release (default) | relwithdebinfo"
+    echo "  -j=<N>          parallel jobs (default: 1)"
+    echo "  -h, --help      show this help"
     echo ""
     echo "Examples:"
-    echo "  ./build.sh                    # clang debug"
-    echo "  ./build.sh gcc                # gcc debug"
-    echo "  ./build.sh clang release      # clang release"
-    echo "  ./build.sh gcc release        # gcc release"
+    echo "  ./build.sh                          # clang release, 1 job"
+    echo "  ./build.sh -c=gcc -t=debug          # gcc debug"
+    echo "  ./build.sh -c=clang -j=4            # clang release, 4 jobs"
+    echo "  ./build.sh -c=gcc -t=relwithdebinfo -j=8"
     exit 1
 }
 
 COMPILER="clang"
-BUILD_TYPE="debug"
+BUILD_TYPE="release"
+JOBS=1
 
 for arg in "$@"; do
     case "$arg" in
-        gcc|clang|intel) COMPILER="$arg" ;;
-        debug|release|relwithdebinfo) BUILD_TYPE="$arg" ;;
+        -c=*) COMPILER="${arg#*=}" ;;
+        -t=*) BUILD_TYPE="${arg#*=}" ;;
+        -j=*) JOBS="${arg#*=}" ;;
         -h|--help) usage ;;
         *) echo "Unknown argument: $arg"; usage ;;
     esac
@@ -43,8 +47,8 @@ fi
 echo "==> Configuring with preset: ${PRESET}"
 cmake --preset "${PRESET}"
 
-echo "==> Building..."
-cmake --build "${BUILD_DIR}" -j"$(nproc)"
+echo "==> Building with ${JOBS} job(s)..."
+cmake --build "${BUILD_DIR}" -j"${JOBS}"
 
 echo "==> Done"
 file bin/*/adminskit_amxx_i386.so 2>/dev/null || true
